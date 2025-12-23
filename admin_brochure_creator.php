@@ -215,40 +215,12 @@ $sizeDisplay  = match ($default_ratio) {
 // Reference options
 $reference_options = get_all_reference_options();
 
+$pageTitle = 'Brochure Creator';
+$activeSection = 'create';
+$extraCss = ['admin-creators.css'];
+require_once __DIR__ . '/admin_header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brochure Creator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Use admin styles for consistent look -->
-    <link rel="stylesheet" href="admin-styles.css">
-</head>
-<body>
-<div class="admin-container">
-    <header class="admin-header">
-        <span class="menu-toggle" id="mobileMenuToggle">&#9776;</span>
-        <div class="brand">WebberSites AI Studio</div>
-        <nav class="top-nav">
-            <a href="index.php" target="_blank">View Store</a>
-        </nav>
-    </header>
-    <div class="admin-main">
-        <?php $currentScript = basename($_SERVER['SCRIPT_NAME']); ?>
-        <aside class="admin-sidebar">
-            <a href="admin_create.php" class="<?php echo $currentScript === 'admin_create.php' ? 'active' : ''; ?>">Create</a>
-            <a href="admin_idea_generator.php" class="<?php echo $currentScript === 'admin_idea_generator.php' ? 'active' : ''; ?>">Idea Generator</a>
-            <a href="admin_media_library.php" class="<?php echo $currentScript === 'admin_media_library.php' ? 'active' : ''; ?>">Library</a>
-            <a href="admin.php?section=designs" class="<?php echo ($currentScript === 'admin.php' && (!isset($_GET['section']) || $_GET['section'] === 'designs')) ? 'active' : ''; ?>">Designs</a>
-            <a href="admin.php?section=products" class="<?php echo ($currentScript === 'admin.php' && isset($_GET['section']) && $_GET['section'] === 'products') ? 'active' : ''; ?>">Products</a>
-            <a href="admin.php?section=orders" class="<?php echo ($currentScript === 'admin.php' && isset($_GET['section']) && $_GET['section'] === 'orders') ? 'active' : ''; ?>">Orders</a>
-            <a href="admin_config.php" class="<?php echo $currentScript === 'admin_config.php' ? 'active' : ''; ?>">Config</a>
-        </aside>
-        <section class="admin-content">
-            <h1>Brochure Creator</h1>
+<h1>Brochure Creator</h1>
             <div class="card">
                 <h2>Create Brochure Page</h2>
                 <form id="brochure-form" method="post" enctype="multipart/form-data">
@@ -327,11 +299,7 @@ $reference_options = get_all_reference_options();
                         </div>
                     <?php endforeach; ?>
                 </div>
-            </div>
-        </section>
-    </div>
-</div>
-<script>
+            </div><script>
 // Brochure generation via AJAX
 document.getElementById('brochure-form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -359,5 +327,4 @@ document.getElementById('brochure-form').addEventListener('submit', function(e) 
     });
 });
 </script>
-</body>
-</html>
+<?php require_once __DIR__ . '/admin_footer.php'; ?>

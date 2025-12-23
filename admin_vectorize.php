@@ -173,186 +173,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SERVER['HTTP_X_REQUESTED_WI
     exit;
 }
 
-?><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin — Vectorize Design</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #111827;
-            --secondary: #1f2937;
-            --accent: #2563eb;
-            --accent-light: #3b82f6;
-            --text-light: #f3f4f6;
-            --text-muted: #9ca3af;
-            --bg: #f6f7fb;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            margin: 0;
-            font-family: Poppins, system-ui, sans-serif;
-            background: var(--bg);
-            color: #333;
-        }
-        .admin-container { display: flex; min-height: 100vh; flex-direction: column; }
-        header.admin-header {
-            background: var(--primary);
-            color: var(--text-light);
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        header .brand { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.03em; }
-        header .top-nav a { color: var(--text-light); text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
-        .admin-main { flex: 1; display: flex; min-height: 0; }
-        .admin-sidebar {
-            width: 220px;
-            background: var(--secondary);
-            color: var(--text-light);
-            padding-top: 24px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        .admin-sidebar a {
-            display: block;
-            padding: 12px 24px;
-            color: var(--text-light);
-            text-decoration: none;
-            font-size: 0.95rem;
-        }
-        .admin-sidebar a.active,
-        .admin-sidebar a:hover {
-            background: var(--accent);
-        }
-        .admin-content {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-        }
-        h1 { font-size: 1.6rem; margin-top: 0; margin-bottom: 20px; }
-        .vector-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            align-items: flex-start;
-        }
-        .vector-preview, .vector-form {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .vector-preview img {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
-        .field-label {
-            font-size: 0.85rem;
-            color: #4b5563;
-            margin-bottom: 6px;
-            display: block;
-        }
-        .input-text {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-        }
-        .input-text:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px var(--accent);
-            outline: none;
-        }
-        .btn-primary {
-            background: var(--accent);
-            color: #ffffff;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        .btn-primary:disabled { opacity: 0.6; cursor: wait; }
-        .error-banner {
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: #b91c1c;
-            background: #fee2e2;
-            border-radius: 6px;
-            padding: 8px 10px;
-            border: 1px solid #fca5a5;
-        }
-        .success-banner {
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: #065f46;
-            background: #d1fae5;
-            border-radius: 6px;
-            padding: 8px 10px;
-            border: 1px solid #6ee7b7;
-        }
-        /* Skeleton loader for vectorization */
-        .preview-frame {
-            position: relative;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        .preview-frame.loading::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(120deg, rgba(30,64,175,0.1) 0%, rgba(148,163,184,0.35) 40%, rgba(30,64,175,0.1) 80%);
-            animation: shimmer 1.4s infinite;
-        }
-        .preview-frame.loading::after {
-            content: "Generating vector…";
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.8rem;
-            color: #6b7280;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.7);
-        }
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-    </style>
-</head>
-<body>
-<div class="admin-container">
-    <header class="admin-header">
-        <div class="brand">WebberSites AI Studio</div>
-        <nav class="top-nav">
-            <a href="index.php" target="_blank">View Store</a>
-        </nav>
-    </header>
-    <div class="admin-main">
-        <?php $currentScript = basename($_SERVER['SCRIPT_NAME']); ?>
-        <aside class="admin-sidebar">
-            <a href="admin.php?section=designs" class="">Designs</a>
-            <a href="admin_design_lab.php" class="">Design Lab</a>
-            <a href="admin_idea_generator.php" class="">Idea Generator</a>
-            <a href="admin_create.php" class="">Create</a>
-            <a href="admin_media_library.php" class="active">Library</a>
-            <a href="admin.php?section=products" class="">Products</a>
-            <a href="admin.php?section=orders" class="">Orders</a>
-            <a href="admin_config.php" class="">Config</a>
-        </aside>
-        <section class="admin-content">
-            <h1>Vectorize Design</h1>
+$pageTitle = 'Admin — Vectorize Design';
+$activeSection = 'create';
+$extraCss = ['admin-creators.css'];
+require_once __DIR__ . '/admin_header.php';
+?>
+<h1>Vectorize Design</h1>
             <p>Original design ID: <?php echo htmlspecialchars($designId); ?></p>
             <div class="vector-container">
                 <!-- Original preview -->
@@ -383,11 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SERVER['HTTP_X_REQUESTED_WI
                     <div id="vector-success" class="success-banner" style="display:none;"></div>
                     <div id="vector-preview" style="margin-top:16px;"></div>
                 </div>
-            </div>
-        </section>
-    </div>
-</div>
-<script>
+            </div><script>
 // AJAX vectorization handler
 document.addEventListener('DOMContentLoaded', function() {
     const form      = document.getElementById('vector-form');
@@ -444,5 +266,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-</body>
-</html>
+<?php require_once __DIR__ . '/admin_footer.php'; ?>

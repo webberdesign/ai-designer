@@ -12,6 +12,12 @@ $designs  = json_decode(@file_get_contents($design_file), true) ?: [];
 $products = json_decode(@file_get_contents($product_file), true) ?: [];
 $orders   = json_decode(@file_get_contents($orders_file), true) ?: [];
 
+// Determine active section
+$section = $_GET['section'] ?? 'designs';
+if (!in_array($section, ['designs', 'products', 'orders'], true)) {
+    $section = 'designs';
+}
+
 // Handle design upload from admin page
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'upload_design') {
     // Process the uploaded file if present
@@ -132,238 +138,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 ?>
 <?php
-// Determine the active section from the query string. Default to 'designs'.
-$section = isset($_GET['section']) ? $_GET['section'] : 'designs';
+$pageTitle     = 'WebberSites AI Studio Dashboard';
+$activeSection = $section;
+$extraCss      = ['admin-creators.css'];
+require_once __DIR__ . '/admin_header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebberSites AI Studio Dashboard</title>
-    <style>
-        :root {
-            --primary: #111827;
-            --secondary: #1f2937;
-            --accent: #2563eb;
-            --accent-light: #3b82f6;
-            --text-light: #f3f4f6;
-            --text-muted: #9ca3af;
-            --bg: #f6f7fb;
-            --bg-dark: #0f172a;
-            --warning: #ef4444;
-            --success: #10b981;
-        }
-        body {
-            margin: 0;
-            font-family: system-ui, sans-serif;
-            background: var(--bg);
-            color: #333;
-        }
-        .admin-container {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-        header.admin-header {
-            background: var(--primary);
-            color: var(--text-light);
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        header .brand {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 0.03em;
-        }
-        header .top-nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.9rem;
-        }
-        .admin-main {
-            flex: 1;
-            display: flex;
-            min-height: 0;
-        }
-        .admin-sidebar {
-            width: 220px;
-            background: var(--secondary);
-            color: var(--text-light);
-            padding-top: 24px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        .admin-sidebar a {
-            display: block;
-            padding: 12px 24px;
-            color: var(--text-light);
-            text-decoration: none;
-            font-size: 0.95rem;
-        }
-        .admin-sidebar a.active,
-        .admin-sidebar a:hover {
-            background: var(--accent);
-        }
-        .admin-content {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-        }
-        h1 {
-            font-size: 1.6rem;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-        .msg {
-            padding: 8px 12px;
-            background: #e0f8e0;
-            color: #2d643d;
-            border: 1px solid #b6e2b6;
-            border-radius: 4px;
-            margin-bottom: 16px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-            font-size: 0.9rem;
-        }
-        th {
-            background: #f9fafb;
-            font-weight: 600;
-        }
-        tr:last-child td {
-            border-bottom: none;
-        }
-        input[type=text], input[type=number] {
-            width: 100%;
-            padding: 6px 8px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-        input[type=checkbox] {
-            width: 18px;
-            height: 18px;
-        }
-        .btn {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background: var(--accent-light);
-        }
-        .pill {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .pill.published {
-            background: var(--success);
-            color: #fff;
-        }
-        .pill.unpublished {
-            background: var(--warning);
-            color: #fff;
-        }
-        .actions a {
-            color: var(--accent);
-            text-decoration: none;
-            margin-right: 8px;
-            font-size: 0.85rem;
-        }
-        .actions a:hover {
-            text-decoration: underline;
-        }
-
-        /* Upload Design card */
-        .upload-card {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .upload-card h2 {
-            margin-top: 0;
-            margin-bottom: 12px;
-            font-size: 1.1rem;
-            color: #111827;
-        }
-        .upload-area-admin {
-            border: 2px dashed #d1d5db;
-            border-radius: 8px;
-            padding: 24px;
-            text-align: center;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .upload-area-admin.dragover {
-            border-color: var(--accent);
-            background: #f3f4f6;
-        }
-        .upload-area-admin span {
-            pointer-events: none;
-        }
-        .upload-field {
-            margin-top: 12px;
-        }
-        .upload-field .field-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-            display: block;
-        }
-    </style>
-</head>
-<body>
-<div class="admin-container">
-    <header class="admin-header">
-        <div class="brand">WebberSites AI Studio</div>
-        <nav class="top-nav">
-            <!-- Link to the public storefront -->
-            <a href="index.php" target="_blank">View Store</a>
-        </nav>
-    </header>
-    <div class="admin-main">
-        <aside class="admin-sidebar">
-            <!-- Main navigation links. We include links to the new design lab and idea generator pages. -->
-            <a href="admin.php?section=designs" class="<?php echo $section === 'designs' ? 'active' : ''; ?>">Designs</a>
-            <!-- Unified Design Lab navigation: highlight for both GPT and Gemini pages -->
-            <a href="admin_design_lab.php" class="<?php echo (basename($_SERVER['SCRIPT_NAME']) === 'admin_design_lab.php' || basename($_SERVER['SCRIPT_NAME']) === 'admin_design_lab_gemini.php') ? 'active' : ''; ?>">Design Lab</a>
-            <a href="admin_idea_generator.php" class="<?php echo basename($_SERVER['SCRIPT_NAME']) === 'admin_idea_generator.php' ? 'active' : ''; ?>">Idea Generator</a>
-            <a href="admin_create.php" class="<?php echo basename($_SERVER['SCRIPT_NAME']) === 'admin_create.php' ? 'active' : ''; ?>">Create</a>
-            <a href="admin_media_library.php" class="<?php echo basename($_SERVER['SCRIPT_NAME']) === 'admin_media_library.php' ? 'active' : ''; ?>">Library</a>
-            <a href="admin.php?section=products" class="<?php echo $section === 'products' ? 'active' : ''; ?>">Products</a>
-            <a href="admin.php?section=orders" class="<?php echo $section === 'orders' ? 'active' : ''; ?>">Orders</a>
-            <a href="admin_config.php" class="<?php echo basename($_SERVER['SCRIPT_NAME']) === 'admin_config.php' ? 'active' : ''; ?>">Config</a>
-        </aside>
-        <section class="admin-content">
-            <?php if (isset($update_msg)): ?><div class="msg"><?php echo htmlspecialchars($update_msg); ?></div><?php endif; ?>
+<?php if (isset($update_msg)): ?><div class="msg"><?php echo htmlspecialchars($update_msg); ?></div><?php endif; ?>
             <?php if (isset($prod_msg)): ?><div class="msg"><?php echo htmlspecialchars($prod_msg); ?></div><?php endif; ?>
             <?php if (isset($upload_msg)): ?><div class="msg"><?php echo htmlspecialchars($upload_msg); ?></div><?php endif; ?>
             <?php if ($section === 'designs'): ?>
@@ -512,12 +292,7 @@ $section = isset($_GET['section']) ? $_GET['section'] : 'designs';
                 <?php else: ?>
                     <p>No orders yet.</p>
                 <?php endif; ?>
-            <?php endif; ?>
-        </section>
-    </div>
-</div>
-</body>
-<script>
+            <?php endif; ?><script>
 document.addEventListener('DOMContentLoaded', function() {
     var dropArea = document.getElementById('upload-area-admin');
     var fileInput = document.getElementById('design-upload-admin');
@@ -552,4 +327,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-</html>
+<?php require_once __DIR__ . '/admin_footer.php'; ?>
