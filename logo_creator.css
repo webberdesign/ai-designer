@@ -1,0 +1,115 @@
+/* Styles for the Logo Creator page. */
+
+/* Base admin styling (copied from admin_logo_creator.php) */
+:root {
+    --primary: #111827;
+    --secondary: #1f2937;
+    --accent: #2563eb;
+    --text-light: #f3f4f6;
+    --text-muted: #9ca3af;
+    --bg: #f6f7fb;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: var(--bg);
+    color: #333;
+}
+
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+header.admin-header {
+    background: var(--primary);
+    color: var(--text-light);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+header .brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+header .top-nav a {
+    color: var(--text-light);
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 0.9rem;
+}
+
+.admin-main {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+}
+
+.admin-sidebar {
+    width: 220px;
+    background: var(--secondary);
+    color: var(--text-light);
+    padding-top: 24px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-sidebar a {
+    display: block;
+    padding: 12px 24px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.admin-sidebar a.active,
+.admin-sidebar a:hover {
+    background: var(--accent);
+}
+
+/* Mobile navigation */
+.menu-toggle {
+    display: none;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    .admin-sidebar {
+        position: fixed;
+        top: 0;
+        left: -240px;
+        height: 100vh;
+        z-index: 1000;
+        width: 200px;
+    }
+    body.mobile-open .admin-sidebar {
+        left: 0;
+    }
+    .admin-main {
+        flex-direction: column;
+    }
+    .menu-toggle {
+        display: inline-block;
+    }
+}
+
+.admin-content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* Additional logo page specific styling may be added as needed */

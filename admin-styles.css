@@ -1,0 +1,334 @@
+/*
+ * Admin Styles for WebberSites AI Studio
+ *
+ * This stylesheet defines a common light‑themed look and feel for all
+ * administrative pages. It centralises variables and base classes for
+ * the header, sidebar, main content, cards, forms, buttons, and
+ * responsive behaviour. Page‑specific tweaks may still appear in
+ * individual PHP files when necessary, but the majority of styling
+ * should be declared here to ensure consistency across the admin UI.
+ */
+
+
+
+   :root {
+            --primary: #111827;
+            --secondary: #1f2937;
+            --accent: #2563eb;
+            --accent-light: #3b82f6;
+            --text-light: #f3f4f6;
+            --text-muted: #9ca3af;
+            --bg: #f6f7fb;
+            --bg-dark: #0f172a;
+	    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --hover-bg: #e8eef7;
+    --card-bg: #ffffff;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
+	    --text-dark: #1f2937;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            margin: 0;
+            font-family: Poppins, system-ui, sans-serif;
+            background: var(--bg);
+            color: #333;
+        }
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        header.admin-header {
+            background: var(--primary);
+            color: var(--text-light);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header .brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+        header .top-nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.9rem;
+        }
+        .admin-main {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+        }
+        .admin-sidebar {
+            width: 220px;
+            background: var(--secondary);
+            color: var(--text-light);
+            padding-top: 24px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transition: left 0.3s ease;
+        }
+        .admin-sidebar a {
+            display: block;
+            padding: 12px 24px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .admin-sidebar a.active,
+        .admin-sidebar a:hover {
+            background: var(--accent);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                position: fixed;
+                top: 0;
+                left: -240px;
+                height: 100vh;
+                z-index: 1000;
+                width: 200px;
+            }
+            body.mobile-open .admin-sidebar {
+                left: 0;
+            }
+            .admin-main {
+                flex-direction: column;
+            }
+            .menu-toggle {
+                display: inline-block;
+            }
+        }
+        .admin-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+        h1 {
+            font-size: 1.6rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        /* Grid of cards */
+        .tool-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+        .tool-card {
+            position: relative;
+            border-radius: 16px;
+            padding: 24px;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 160px;
+            overflow: hidden;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .tool-card i {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+        .tool-card span {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        /* Individual gradients */
+        .tool-logo        { background: linear-gradient(135deg, #ff7e5f, #feb47b); }
+        .tool-tshirt      { background: linear-gradient(135deg, #6a11cb, #2575fc); }
+        /* Removed tool-tshirt2 since a single card covers both models */
+        .tool-poster      { background: linear-gradient(135deg, #f953c6, #b91d73); }
+        .tool-flyer       { background: linear-gradient(135deg, #fc6767, #ec008c); }
+        .tool-social      { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .tool-photo       { background: linear-gradient(135deg, #f7971e, #ffd200); }
+        /* New gradient cards for additional tools */
+        .tool-business    { background: linear-gradient(135deg, #cc2b5e, #753a88); }
+        .tool-certificate { background: linear-gradient(135deg, #11998e, #38ef7d); }
+        .tool-packaging   { background: linear-gradient(135deg, #ee0979, #ff6a00); }
+        .tool-illustration{ background: linear-gradient(135deg, #7F7FD5, #86A8E7); }
+        .tool-mockup      { background: linear-gradient(135deg, #8E2DE2, #4A00E0); }
+        .tool-brochure    { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+        .tool-video       { background: linear-gradient(135deg, #41295a, #2f0743); }
+        /* Mobile: show icons larger and hide text */
+        @media (max-width: 600px) {
+            .tool-card span { display: none; }
+            .tool-card i   { font-size: 3rem; }
+            .tool-card { align-items: center; }
+        }
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Form elements */
+input[type="text"],
+input[type="color"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    background: var(--secondary);
+    color: var(--text-dark);
+}
+
+input[type="text"]:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
+    outline: none;
+}
+
+.btn {
+    background: var(--primary);
+    color: var(--text-light);
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn:hover {
+    background: var(--primary-dark);
+}
+
+/* Modal base styles */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--secondary);
+    border-radius: 8px;
+    max-width: 90vw;
+    width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+}
+
+.modal-image {
+    flex: 1;
+    padding: 24px;
+}
+
+.modal-details {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.modal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.modal-actions a {
+    background: var(--primary);
+    color: var(--text-light);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.modal-actions a:hover {
+    background: var(--primary-dark);
+}
+
+.close-btn {
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.close-btn:hover {
+    color: var(--primary);
+}
+
+/* Responsive behaviours */
+@media (max-width: 900px) {
+    .admin-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        width: 240px;
+        z-index: 200;
+    }
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+    .menu-toggle {
+        display: block;
+    }
+    .admin-main {
+        flex-direction: column;
+    }
+    .admin-content {
+        padding: 16px;
+    }
+}

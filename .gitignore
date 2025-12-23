@@ -1,0 +1,19 @@
+# Secrets
+.env
+config.php
+config.json
+wp-config.php
+*.json
+
+# Runtime
+slides/
+generated_tshirts/
+generated/
+error_log
+
+# Backups
+_backups/
+*.sql
+
+# OS
+.DS_Store
