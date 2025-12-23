@@ -139,7 +139,8 @@ function find_file_by_id(string $id): ?string
         'upload'        => __DIR__ . '/upload_designs.json',
         'cover'         => __DIR__ . '/cover_designs.json',
         'brochure'      => __DIR__ . '/brochure_designs.json',
-        'video'         => __DIR__ . '/video_designs.json'
+        'video'         => __DIR__ . '/video_designs.json',
+        'invitation'    => __DIR__ . '/invitation_designs.json',
     ];
     foreach ($paths as $file) {
         if (!is_file($file)) continue;
